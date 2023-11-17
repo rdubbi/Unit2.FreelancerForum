@@ -1,60 +1,90 @@
-// Far from finished, this is my work so far:
+// I couldnt sleep until I figured this out... but I finally have something functional.
+// I am 95% confident it even meets the criteria for full points!
+// I even.. understand what is going too? :0
 
-// Static HTML Elements on my page.
-const body = document.body;
-
-const h1 = document.createElement("h1");
-h1.innerText = "42069err.";
-
-const h2 = document.createElement("h2");
-h2.innerText = "formerly known as fiverr.com";
-
-const h3 = document.createElement("h3");
-h3.innerText = "someday this will calculate the average price...";
-
-const h4 = document.createElement("h4");
-h4.innerText =
-  "The following list will display the name, occupation and price our 420690errs are offering! The average price is updated in real time above.";
-
-const ul = document.createElement("ul");
-ul.innerText = "ul";
-
-const li = document.createElement("li");
-li.innerText = "li";
-
-ul.append(li);
-body.append(h1, h2, h3, h4, ul);
-
-// Attempting to call the function gigLister() in order to generate random combinations of names, occupations and prices.
-gigLister();
-
+// an array of names, jobs, and prices
 const freelancers = [
   { name: "Dayman", occupation: "Meteorite Hunter", price: 420 },
-  { name: "Nightman", occupation: "programmer", price: 69 },
-  { name: "ahAHah", occupation: "vaporizer sommelier", price: 666 },
+  { name: "Nightman", occupation: "Programmer", price: 69 },
+  { name: "ahAHah", occupation: "Vape Sommelier", price: 666 },
   { name: "Champion of SUN", occupation: "Drag Queen", price: 888 },
   { name: "Michealangelo", occupation: "Underwater Welder", price: 3 },
-  { name: "Donatello", occupation: "A sk8r boi", price: 21 },
-  { name: "Leonardo", occupation: "mob boss therapist", price: 121 },
-  { name: "Rafael", occupation: "influencer", price: 777 },
+  { name: "Donatello", occupation: "Sk8r Boi", price: 21 },
+  { name: "Leonardo", occupation: "Mob Therapist", price: 121 },
+  { name: "Rafael", occupation: "Influencer", price: 777 },
+  { name: "Borat", occupation: "Nice/Not Consultant", price: 777 },
 ];
 
-function gigLister() {
-  // iterate through array of objects called freelancer.
-  for (let freelancer = 0; freelancer < freelancers.length; freelancer++) {
-    // generate get random names, occupations, and prices
-    const freelancerName =
-      freelancers.name[Math.floor(Math.random() * freelancers.length)];
-    const freelancerGig =
-      freelancers.occupation[Math.floor(Math.random() * freelancers.length)];
-    const freelancerPrice =
-      freelancers.price[Math.floor(Math.random() * freelancers.length)];
-    // create a list html element
-    const element = document.createElement("li");
-    //   add text including random combination name, occupation and price.
-    element.innerText =
-      freelancerName + " / " + freelancerGig + " / " + freelancerPrice;
-  }
-  //   add list item with text to ul previously created.
-  ul.append(element);
+//This function creates my list and generates my average price calculation.
+function activeElements() {
+  // creating some containers and variables.
+  const freelanceContainer = document.querySelector("#list");
+  const avgContainer = document.querySelector("#avgCalc");
+  let priceSum = 0;
+  let priceAvg = 0;
+
+  freelancers.forEach(() => {
+    // I originally thought they all had to be a random mix of the names/jobs/prices in the array.
+    // I realize now that was not part of the criteria, but I wasted so much time on it yesterday I just had to finish the job.
+    const newFreelancer = document.createElement("li");
+    const rName =
+      freelancers[Math.floor(Math.random() * freelancers.length)].name;
+    const rGig =
+      freelancers[Math.floor(Math.random() * freelancers.length)].occupation;
+    const rPrice =
+      freelancers[Math.floor(Math.random() * freelancers.length)].price;
+
+    newFreelancer.textContent = `${rName}, a ${rGig}.... $${rPrice}`;
+    freelanceContainer.append(newFreelancer);
+    // I wanted to make a function to do this calculation, but I struggled to get the accurate rName, rGig, and rPrice
+    // outside of this foreach. This works, but its not as pretty as it should be.
+    priceSum += rPrice;
+    priceAvg = priceSum / freelancers.length;
+
+    avgContainer.textContent = `The Average gig price is currently $${Math.round(
+      priceAvg
+    )} (updated every 20 seconds, for your convenience!)`;
+  });
+  //   calling my function that adds a new freelancer every few seconds.
+  addRando();
 }
+
+// A function that adds a mysterious random freelancer into the mix at an interval of 2.269 seconds.
+// Because of my struggle to make the average price calculator its own function,
+// I couldnt get prices from addRando to be included in the live average price traker, causing an innacuracy.
+// So I resorted to adding a Free (non number) price that wouldnt alter the average price tracker.
+function addRando() {
+  royJobs = [
+    { occupation: "Bad Advice" },
+    { occupation: "Good Advice" },
+    { occupation: "Dad Jokes" },
+    { occupation: "Insomnia" },
+    { occupation: "Sourdough" },
+    { occupation: "Alright Stories" },
+    { occupation: "Guitar Noodling" },
+  ];
+
+  setInterval(() => {
+    const freelanceContainer = document.querySelector("#list");
+    const randoFreelancer = document.createElement("li");
+
+    const name = "Roy";
+    const job = royJobs[Math.floor(Math.random() * royJobs.length)].occupation;
+    const bigBucks = "FREE WHILE SUPPLIES LAST!!";
+
+    randoFreelancer.textContent = `${name}, Some ${job}.... $${bigBucks}`;
+    freelanceContainer.append(randoFreelancer);
+    console.log(randoFreelancer);
+  }, 2269);
+}
+
+activeElements();
+
+// I originally wanted my list to populate freelancers one at a time.
+// then once an amount of freelancers = freelancer.length was reached,
+// I wanted the next new freelancer generated to replace the oldest/nextoldest freelancer in the list.
+// I never figured out how to do that and I would like to figure out how!
+// I added this is close but not quite solution to that problem. The page reloads every 12 seconds, triggering a fresh information.
+setTimeout(function () {
+  window.location.reload();
+}, 20000);
